@@ -1,0 +1,21 @@
+data/*
+!data/README.md
+!data/geo.json
+!data/geo-lookup.csv
+!data/csse-lookup.csv
+test.js
+
+node_modules
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.cache
+.project

@@ -1,0 +1,29 @@
+{
+  "name": "covid-dashboard",
+  "version": "0.0.0",
+  "description": "We want the most recent file in the folder at https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmericanRedCross/covid-dashboard.git"
+  },
+  "author": "danbjoseph",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/AmericanRedCross/covid-dashboard/issues"
+  },
+  "homepage": "https://github.com/AmericanRedCross/covid-dashboard#readme",
+  "dependencies": {
+    "async": "^3.2.0",
+    "cron": "^1.8.2",
+    "crossfilter2": "^1.5.2",
+    "d3": "^5.15.1",
+    "express": "^4.17.1",
+    "luxon": "^1.23.0",
+    "needle": "^2.4.1",
+    "papaparse": "^5.2.0"
+  }
+}
