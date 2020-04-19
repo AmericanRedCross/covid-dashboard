@@ -25,7 +25,7 @@ Papa.parse(fs.readFileSync(path.join(__basedir,'data','csse-lookup.csv'), 'utf8'
   complete: function(results) {
     async.each(results.data, function(row, cb) {
       var myKey = row.country
-      var myValue = row['icrc-iso2']
+      var myValue = row['ISO2']
       csseLookup[myKey] = myValue
       cb();
     }, function(err){ 
@@ -81,6 +81,10 @@ CSSE.prototype.getLatest = function(callback) {
   console.log("csse getLatest ...")
   var self = this;
   var csseLatest = [];
+  csseLatest = csseLatest.concat({
+    ISO2: "N/A",
+    confirmed_csse: 0
+  })
   var csseSummary = [{confirmed:0,deaths:0,recovered:0}];
   async.waterfall([
     function(cb) { //step 1
@@ -104,11 +108,17 @@ CSSE.prototype.getLatest = function(callback) {
                 var confirmedByCountry = countries.group().reduceSum(d => d[latestColumn]);
                 // we're going to save just the iso and the confirmed number
                 async.each(confirmedByCountry.all(), function(item, eachCallback){
-                  csseLatest = csseLatest.concat({
-                    iso: csseLookup[item.key],
-                    confirmed: item.value
-                  })
-                  csseSummary[0].confirmed += item.value
+                  var indexMatch = csseLatest.findIndex(element => element.ISO2 === csseLookup[item.key])
+                  // we're going to lump all our non matches under "-99"
+                  if(indexMatch !== -1){
+                    csseLatest[indexMatch].confirmed_csse += Number(item.value)
+                  } else {
+                    csseLatest = csseLatest.concat({
+                      ISO2: csseLookup[item.key],
+                      confirmed_csse: item.value
+                    })
+                  }
+                  csseSummary[0].confirmed += Number(item.value)
                   eachCallback();
                 }, function(err){
                   csseSummary[0].date_confirmed = latestColumn
@@ -140,9 +150,13 @@ CSSE.prototype.getLatest = function(callback) {
                 var deathsByCountry = countries.group().reduceSum(d => d[latestColumn]);
                 // we're going to save just the iso and the deaths number
                 async.each(deathsByCountry.all(), function(item, eachCallback){
-                  var indexMatch = csseLatest.findIndex(element => element.iso === csseLookup[item.key])
-                  csseLatest[indexMatch].deaths = item.value
-                  csseSummary[0].deaths += item.value
+                  var indexMatch = csseLatest.findIndex(element => element.ISO2 === csseLookup[item.key])
+                  if(!csseLatest[indexMatch].deaths_csse){
+                    csseLatest[indexMatch].deaths_csse = Number(item.value)
+                  } else {
+                    csseLatest[indexMatch].deaths_csse += Number(item.value)
+                  }
+                  csseSummary[0].deaths += Number(item.value)
                   eachCallback();
                 }, function(err){
                   csseSummary[0].date_deaths = latestColumn
@@ -174,9 +188,13 @@ CSSE.prototype.getLatest = function(callback) {
                 var recoveredByCountry = countries.group().reduceSum(d => d[latestColumn]);
                 // we're going to save just the iso and the recovered number
                 async.each(recoveredByCountry.all(), function(item, eachCallback){
-                  var indexMatch = csseLatest.findIndex(element => element.iso === csseLookup[item.key])
-                  csseLatest[indexMatch].recovered = item.value
-                  csseSummary[0].recovered += item.value
+                  var indexMatch = csseLatest.findIndex(element => element.ISO2 === csseLookup[item.key])
+                  if(!csseLatest[indexMatch].recovered_csse){
+                    csseLatest[indexMatch].recovered_csse = Number(item.value)
+                  } else {
+                    csseLatest[indexMatch].recovered_csse += Number(item.value)
+                  }
+                  csseSummary[0].recovered += Number(item.value)
                   eachCallback();
                 }, function(err){
                   csseSummary[0].date_recovered = latestColumn

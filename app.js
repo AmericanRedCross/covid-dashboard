@@ -18,19 +18,23 @@ const who = new WHO()
 
 function sync() {
   csse.getLatest(function(err,result){
-    console.log("result:", result)
-    console.log("err:",err)
-  });
-  who.casesPer100kMapping(function(err,result) {
-    console.log("result:", result)
-    console.log("err:",err)
+    console.log("result:", result);
+    console.log("err:",err);
+    who.whoGlobalData(function(err,result) {
+      console.log("result:", result);
+      console.log("err:",err);
+      who.mergeWithCSSE(function(err,result){
+          console.log("result:", result);
+          console.log("err:",err);
+      })
+    });
   });
 }
 
 // initialize...
 sync();
-// and set to run every 30 minutes...
+// and set to run every 1 hour...
 var CronJob = require('cron').CronJob;
-new CronJob('0 */30 * * * *', function() {
+new CronJob('0 0 */1 * * *', function() {
   sync()
 }, null, true, 'America/New_York').start();
