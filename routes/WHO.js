@@ -49,7 +49,11 @@ WHO.prototype.whoGlobalData = function(callback) {
     function(cb) { //step 2
       console.log("data fetch ...")
       const globalDataURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSe-8lf6l_ShJHvd126J-jGti992SUbNLu-kmJfx1IRkvma_r4DHi0bwEW89opArs8ZkSY5G2-Bc1yT/pub?gid=0&single=true&output=csv"
-      needle.get(globalDataURL, function(error, response) {
+      const needleOptions = {
+        follow_max: 5 // follow up to five redirects
+      }
+      needle.get(globalDataURL, needleOptions, function(error, response) {
+        console.log(response.statusCode)
         if (error) cb(error)
         if (!error && response.statusCode == 200)
           Papa.parse(response.body, {

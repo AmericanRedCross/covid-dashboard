@@ -94,6 +94,7 @@ CSSE.prototype.getLatest = function(callback) {
         if (!error && response.statusCode == 200)
           Papa.parse(response.body, {
             header: true,
+            skipEmptyLines: true,
             error: function(error) {
               if(error) cb(error)
             },
@@ -109,7 +110,7 @@ CSSE.prototype.getLatest = function(callback) {
                 // we're going to save just the iso and the confirmed number
                 async.each(confirmedByCountry.all(), function(item, eachCallback){
                   var indexMatch = csseLatest.findIndex(element => element.ISO2 === csseLookup[item.key])
-                  // we're going to lump all our non matches under "-99"
+                  // we're going to lump all our non matches under "N/A"
                   if(indexMatch !== -1){
                     csseLatest[indexMatch].confirmed_csse += Number(item.value)
                   } else {
@@ -136,6 +137,7 @@ CSSE.prototype.getLatest = function(callback) {
         if (!error && response.statusCode == 200)
           Papa.parse(response.body, {
             header: true,
+            skipEmptyLines: true,
             error: function(error) {
               if(error) cb(error)
             },
@@ -174,6 +176,7 @@ CSSE.prototype.getLatest = function(callback) {
         if (!error && response.statusCode == 200)
           Papa.parse(response.body, {
             header: true,
+            skipEmptyLines: true,
             error: function(error) {
               if(error) cb(error)
             },
